@@ -67,4 +67,3 @@ def update(amenity_id=None):
                 pass
         new_amenity.save()
     return (jsonify(new_amenity.to_dict()), 200)
-
