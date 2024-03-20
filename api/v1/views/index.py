@@ -9,7 +9,15 @@ app_views that returns a JSON
 from flask import jsonify
 from models import storage
 from api.v1.views import app_views
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.user import User
+from models.review import Review
 
+classes_dictionary = {"amenities": Amenity, "cities": City,
+    "places": Place, "reviews": Review, "states": State, "users": User}
 
 @app_views.route('/status')
 def status():
@@ -20,13 +28,7 @@ def status():
 @app_views.route('/stats')
 def stats():
     """returns count of models"""
-    return jsonify(
-        {
-            "amenities": storage.count("Amenity"),
-            "cities": storage.count("City"),
-            "places": storage.count("Place"),
-            "reviews": storage.count("Review"),
-            "states": storage.count("State"),
-            "users": storage.count("User")
-        }
-    )
+    classes = {}
+    for obj in classes_dictionary:
+        classes.update({obj: storage.count(classes_dictionary[obj])})
+    return jsonify(classes)
